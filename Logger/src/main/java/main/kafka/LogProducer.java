@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import main.model.Log;
 
 
+/**
+ * Service class responsible for producing and sending log messages to a Kafka topic.
+ */
 @Service
 public class LogProducer {
 	
@@ -23,6 +26,11 @@ public class LogProducer {
 		this.kafkaTemplate = kafkaTemplate;
 	}
 	
+	/**
+     * Sends a log message to the Kafka topic.
+     *
+     * @param log The log object containing log information.
+     */
 	public void sendMessage(Log log)
 	{
         Message<Log> message = MessageBuilder

@@ -13,12 +13,21 @@ import main.service.LogValidationService;
 @RestController
 public class LogController {
 	
+	// Inject the LogValidationService to validate logs before sending them.
 	@Autowired
 	LogValidationService logValidationService;
 	
+	//Inject the log producer to send logs to Kafka topic
 	@Autowired
 	LogProducer logproducer;
 	
+	
+	/**
+	 * Endpoint for creating a new log entry.
+	 *
+	 * @param log The log object containing log information.
+	 * @return ResponseEntity indicating the success or failure of log creation.
+	 */
 	@PostMapping("/logs")
     public ResponseEntity<String> createLogEntry(@RequestBody Log log) {
 
