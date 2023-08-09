@@ -17,8 +17,8 @@ public class LogProducer {
 	
 	private KafkaTemplate<String,Log> kafkaTemplate; 
 	
-	@Value("${kafka.topic.name}")
-	private String topicName;
+//	@Value("${kafka.topic.name}")
+//	private String topicName;
 
 	
 	public LogProducer(KafkaTemplate<String,Log> kafkaTemplate)
@@ -31,7 +31,7 @@ public class LogProducer {
      *
      * @param log The log object containing log information.
      */
-	public void sendMessage(Log log)
+	public void sendMessage(String topicName ,Log log)
 	{
         Message<Log> message = MessageBuilder
                 .withPayload(log)

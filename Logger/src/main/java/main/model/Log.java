@@ -15,7 +15,7 @@ public class Log {
 	private String correlationId;
 
     // Log level indicating the severity of the log entry (e.g., INFO, WARNING, ERROR)
-    private String logLevel;
+    private LogLevel logLevel;
 
     // Source of the log message 
     private String source;
@@ -25,4 +25,12 @@ public class Log {
 
     // Message content of the log entry
     private String message;
+    
+    // Enum for log levels
+    public enum LogLevel {
+        INFO,
+        WARN,
+        ERROR,
+        DEBUG
+    }
 }
