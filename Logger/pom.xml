@@ -59,6 +59,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>kafka-logger</finalName>
 	</build>
 
 </project>
