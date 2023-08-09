@@ -33,8 +33,11 @@ public class LogProducer {
      */
 	public void sendMessage(Log log)
 	{
-	    kafkaTemplate.send(topicName, log);
-
+        Message<Log> message = MessageBuilder
+                .withPayload(log)
+                .setHeader(KafkaHeaders.TOPIC, topicName)
+                .build();
+		kafkaTemplate.send(message);
 	}
 
 }
