@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import main.kafka.LogProducer;
 import main.model.Log;
-import main.service.LogService;
+import main.util.LogUtil;
 
 @RestController
 public class LogController {
 	
-	// Inject the LogValidationService to validate logs before sending them.
+	// Inject the LogUtil to validate logs before sending them.
 	@Autowired
-	LogService logService;
+	LogUtil logUtil;
 	
 	//Inject the log producer to send logs to Kafka topic
 	@Autowired
@@ -31,9 +31,9 @@ public class LogController {
 	@PostMapping("/logs")
     public ResponseEntity<String> createLogEntry(@RequestBody Log log) {
 
-        if (logService.isValidLog(log)) 
+        if (logUtil.isValidLog(log)) 
         {
-        	logproducer.sendMessage(logService.getTopicName(log.getLogLevel()),log);
+        	logproducer.sendMessage(logUtil.getTopicName(log.getSource()),log);
             return ResponseEntity.ok("Log entry created successfully");
         } 
         else 
