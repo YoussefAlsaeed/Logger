@@ -58,9 +58,11 @@ public class Log {
     
     // Enum for log levels
     public enum LogLevel {
+    	TRACE,
+        DEBUG,
         INFO,
         WARN,
         ERROR,
-        DEBUG
+        FATAL
     }
 }
