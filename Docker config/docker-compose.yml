@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   spring-boot-app:
-    image: kafkalogger:v1 # spring-app-image:tag
+    image: kafkalogger:latest # spring-app-image:tag
     ports:
       - "8080:8080" 
     depends_on:
@@ -45,8 +45,6 @@ services:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data:rw
     ulimits:
       memlock:
         soft: -1

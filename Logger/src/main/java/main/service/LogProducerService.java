@@ -1,6 +1,6 @@
-package main.kafka;
+package main.service;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -13,18 +13,9 @@ import main.model.Log;
  * Service class responsible for producing and sending log messages to a Kafka topic.
  */
 @Service
-public class LogProducer {
-	
-	private KafkaTemplate<String,Log> kafkaTemplate; 
-	
-//	@Value("${kafka.topic.name}")
-//	private String topicName;
-
-	
-	public LogProducer(KafkaTemplate<String,Log> kafkaTemplate)
-	{
-		this.kafkaTemplate = kafkaTemplate;
-	}
+public class LogProducerService {
+	@Autowired
+	private KafkaTemplate<String,Object> kafkaTemplate; 
 	
 	/**
      * Sends a log message to the Kafka topic.
