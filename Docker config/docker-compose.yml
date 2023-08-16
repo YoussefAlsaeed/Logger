@@ -1,9 +1,12 @@
 version: '3.3'
 services:
   spring-boot-app:
-    image: kafkalogger:latest # spring-app-image:tag
+    image: kafkalogger:v2 # spring-app-image:tag
+    restart: always
     ports:
       - "8080:8080" 
+    volumes:
+      - ./logs:/logs  
     depends_on:
       - kafka 
 
