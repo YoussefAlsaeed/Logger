@@ -1,15 +1,12 @@
 
 package main.service;
 
-import javax.validation.Valid;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-
 import main.model.Log;
 import main.util.LogValidationUtil;
 
@@ -26,6 +23,11 @@ public class LogConsumerService {
 	@Autowired
 	LogProducerService logProducer;
 	
+	//Inject the LogFileService to configure the log file name the log is typed into
+	@Autowired
+	LogFileService logFileService;
+
+	
 	/**
 	 * Method that consumes logs from the client kafka topic to validate the log then send it to the LogRepo topic.
 	 * 
@@ -35,8 +37,13 @@ public class LogConsumerService {
 
 	@KafkaListener(topics = "${kafka.topic.client.name}", groupId = "${spring.kafka.consumer.group-id}")
     public void consume(Log log) {
+		
+        String time = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String filename = log.getSource().toString() + "_" + time;
+        
 		if(logUtil.isValidLog(log))
 		{
+        	logFileService.handleLogFile(filename, log);
 			logProducer.sendMessage(logUtil.getTopicName(log.getSource()),log);
 		}
 		else
