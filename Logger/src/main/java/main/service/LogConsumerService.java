@@ -44,7 +44,7 @@ public class LogConsumerService {
 		if(logUtil.isValidLog(log))
 		{
         	logFileService.handleLogFile(filename, log);
-			logProducer.sendMessage(logUtil.getTopicName(log.getSource()),log);
+			logProducer.sendMessage(log);
 		}
 		else
 		{

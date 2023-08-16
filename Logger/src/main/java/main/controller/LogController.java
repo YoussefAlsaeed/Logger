@@ -52,7 +52,7 @@ public class LogController {
         if (logUtil.isValidLog(log)) 
         {
         	logFileService.handleLogFile(filename, log);
-        	logproducer.sendMessage(logUtil.getTopicName(log.getSource()),log);
+        	logproducer.sendMessage(log);
             return ResponseEntity.ok("Log entry created successfully");
         } 
         else 

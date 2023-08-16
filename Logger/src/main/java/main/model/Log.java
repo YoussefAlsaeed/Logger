@@ -37,7 +37,7 @@ public class Log {
     private LogLevel logLevel;
 
     @NotNull(message = "Source cannot be null")
-    private Source source;
+    private String source;
 
     // Destination of the log message
     @NotBlank(message = "Destination cannot be blank")
