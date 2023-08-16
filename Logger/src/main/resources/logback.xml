@@ -1,0 +1,44 @@
+
+<configuration>
+	
+	
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender> 
+
+    <appender name="SIFTING_APPENDER" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>source</key>
+            <defaultValue>def</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${source}" class="ch.qos.logback.core.FileAppender">
+                <file>logs/history/${source}.log</file>        
+                <append>false</append>
+                <locking>false</locking>
+                <immediateFlush>true</immediateFlush>
+                <prudent>true</prudent> <!-- Use prudent mode -->
+
+                <encoder>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+        
+         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>ACCEPT</marker>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>    
+    </appender>
+    
+
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/> 
+        <appender-ref ref="SIFTING_APPENDER"/>
+    </root>
+</configuration>

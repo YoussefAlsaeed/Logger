@@ -1,5 +1,8 @@
 package main.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import main.model.Log;
+import main.service.LogFileService;
 import main.service.LogProducerService;
 import main.util.LogValidationUtil;
 
@@ -28,6 +32,9 @@ public class LogController {
 	@Autowired
 	LogProducerService logproducer;
 	
+	//Inject the LogFileService to configure the log file name the log is typed into
+	@Autowired
+	LogFileService logFileService;
 	
 	/**
 	 * Endpoint for creating a new log entry.
@@ -39,9 +46,12 @@ public class LogController {
 	@PostMapping("/logs")
     public ResponseEntity<String> consumeLog(@RequestBody @Valid Log log) 
 	{
+        String time = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String filename = log.getSource().toString() + "_" + time;
 
         if (logUtil.isValidLog(log)) 
         {
+        	logFileService.handleLogFile(filename, log);
         	logproducer.sendMessage(logUtil.getTopicName(log.getSource()),log);
             return ResponseEntity.ok("Log entry created successfully");
         } 
