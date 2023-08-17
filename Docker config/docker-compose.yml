@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   spring-boot-app:
-    image: youssefalsaaed/kafkalogger:v3 # spring-app-image:tag
+    image: youssefalsaaed/kafkalogger:v4 # spring-app-image:tag
     restart: always
     ports:
       - "8080:8080" 
@@ -13,6 +13,8 @@ services:
   zookeeper:
     container_name: zookeeper-cntr
     image: confluentinc/cp-zookeeper:7.2.0
+    restart: always
+
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -20,6 +22,8 @@ services:
   kafka:
     container_name: kafka-cntr
     image: confluentinc/cp-kafka:7.2.0
+    restart: always
+
     depends_on:
       - zookeeper
     ports:
