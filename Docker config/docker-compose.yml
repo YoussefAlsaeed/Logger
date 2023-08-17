@@ -1,14 +1,14 @@
 version: '3.3'
 services:
   spring-boot-app:
-    image: kafkalogger:v2 # spring-app-image:tag
+    image: kafkalogger:v3 # spring-app-image:tag
     restart: always
     ports:
       - "8080:8080" 
     volumes:
       - ./logs:/logs  
     depends_on:
-      - kafka 
+      - kafka  
 
   zookeeper:
     container_name: zookeeper-cntr
@@ -24,6 +24,7 @@ services:
       - zookeeper
     ports:
       - 9092:9092
+      - 29092:29092
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-cntr:2181

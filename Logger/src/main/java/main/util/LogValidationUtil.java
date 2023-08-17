@@ -49,23 +49,4 @@ public class LogValidationUtil {
 		return true;
 	}
 	
-	/**
-	 * Gets the topic name using the log's source
-	 * 
-	 * @param logSource The source of the log
-	 * @return topic name to produce logs to
-	 */
-	public String getTopicName(Log.Source logSource) {
-        switch (logSource) {
-            case SOURCE_A:
-                return "sourceA-topic";
-            case SOURCE_B:
-                return "sourceB-topic";
-            case SOURCE_C:
-                return "sourceC-topic";
-            default:
-                throw new IllegalArgumentException("Undefined log source : " + logSource);
-        }
-    }
-
 }
