@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -51,5 +52,7 @@ public class LogProducerService {
         System.out.println("IN LOG PRODUCER : " + topicName);
 		kafkaTemplate.send(message);
 	}
+
+
 
 }
