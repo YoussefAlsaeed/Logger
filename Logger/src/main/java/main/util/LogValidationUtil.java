@@ -1,18 +1,10 @@
 package main.util;
 
-import java.util.EnumSet;
-import java.util.stream.Stream;
-
-import javax.validation.Valid;
-import javax.validation.Validator;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-
+import jakarta.validation.Valid;
 import main.model.Log;
 
 @Component
