@@ -3,10 +3,10 @@ package main.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import main.model.Log;
 import main.service.LogFileService;
 import main.service.LogProducerService;
@@ -24,6 +25,7 @@ import main.util.LogValidationUtil;
 @RestController
 @Validated
 @RequestMapping("/log")
+@PreAuthorize("hasRole('client_user')")
 public class LogController {
 	
 	// Inject the LogUtil to validate logs before sending them.
