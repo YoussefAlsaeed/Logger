@@ -25,7 +25,7 @@ import main.util.LogValidationUtil;
 @RestController
 @Validated
 @RequestMapping("/log")
-@PreAuthorize("hasRole('client_user')")
+//@PreAuthorize("hasRole('client_user')")
 public class LogController {
 	
 	// Inject the LogUtil to validate logs before sending them.
