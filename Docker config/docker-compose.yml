@@ -2,7 +2,7 @@ version: '3.3'
 services:
   spring-boot-app:
     container_name: SpringApp
-    image: youssefalsaaed/kafkalogger:rh # spring-app-image:tag
+    image: kafkalogger:kc # spring-app-image:tag
     restart: always
     ports:
       - "8080:8081" 
@@ -10,18 +10,19 @@ services:
       - ./logs:/logs  
     depends_on:
       - kafka
-      - rh-sso
+      - keycloak
       
-  rh-sso:
-    image: registry.redhat.io/rh-sso-7/sso76-openshift-rhel8:7.6-25
-    container_name: rh-sso
-    volumes:
-      - ./sso-data:/opt/eap/standalone/data
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1
+    container_name: keycloak
+    hostname: keycloak
+    restart: always  
+    command: start-dev    
     ports:
       - 8888:8080 
     environment:
-      SSO_ADMIN_USERNAME: admin
-      SSO_ADMIN_PASSWORD: admin  
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin  
 
   zookeeper:
     container_name: zookeeper-cntr
@@ -76,7 +77,6 @@ services:
       - kafka
     stdin_open: true
     tty: true
-    restart: always
     logging:
       driver: "json-file"
       options:
@@ -103,7 +103,6 @@ services:
       - elasticsearch
     stdin_open: true
     tty: true
-    restart: always
     logging:
       driver: "json-file"
       options:
@@ -128,7 +127,6 @@ services:
       - elasticsearch
     stdin_open: true
     tty: true
-    restart: always
     links: ['elasticsearch']
     logging:
       driver: "json-file"
