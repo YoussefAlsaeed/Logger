@@ -1,20 +1,32 @@
 version: '3.3'
 services:
   spring-boot-app:
-    image: youssefalsaaed/kafkalogger:v4 # spring-app-image:tag
+    container_name: SpringApp
+    image: youssefalsaaed/kafkalogger:rh # spring-app-image:tag
     restart: always
     ports:
-      - "8080:8080" 
+      - "8080:8081" 
     volumes:
       - ./logs:/logs  
     depends_on:
-      - kafka  
+      - kafka
+      - rh-sso
+      
+  rh-sso:
+    image: registry.redhat.io/rh-sso-7/sso76-openshift-rhel8:7.6-25
+    container_name: rh-sso
+    volumes:
+      - ./sso-data:/opt/eap/standalone/data
+    ports:
+      - 8888:8080 
+    environment:
+      SSO_ADMIN_USERNAME: admin
+      SSO_ADMIN_PASSWORD: admin  
 
   zookeeper:
     container_name: zookeeper-cntr
-    image: confluentinc/cp-zookeeper:7.2.0
     restart: always
-
+    image: confluentinc/cp-zookeeper:7.2.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -22,10 +34,9 @@ services:
   kafka:
     container_name: kafka-cntr
     image: confluentinc/cp-kafka:7.2.0
-    restart: always
-
     depends_on:
       - zookeeper
+    restart: always  
     ports:
       - 9092:9092
       - 29092:29092
@@ -47,6 +58,7 @@ services:
   elasticsearch:
     container_name: elasticsearch-cntr
     image: elasticsearch:7.9.1
+    restart: always    
     environment:
       - cluster.name=kafka-cluster
       - bootstrap.memory_lock=true
@@ -78,6 +90,7 @@ services:
   logstash:
     container_name: logstash-cntr
     image: logstash:7.9.1
+    restart: always    
     ulimits:
       memlock:
         soft: -1
@@ -104,6 +117,7 @@ services:
   kibana:
     container_name: kibana-cntr
     image: kibana:7.9.1
+    restart: always    
     ulimits:
       memlock:
         soft: -1
@@ -126,7 +140,3 @@ services:
       interval: 30s
       retries: 3
       timeout: 10s
-
-volumes:
-  elasticsearch_data:
-    driver: local
