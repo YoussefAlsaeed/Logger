@@ -1,12 +1,13 @@
 package main.security;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
@@ -24,14 +25,21 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter();
+    
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthConverter.class);
+
 
     @Value("${jwt.auth.converter.principle-attribute}")
     private String principleAttribute;
+    
     @Value("${jwt.auth.converter.resource-id}")
     private String resourceId;
+    
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuer;
 
     @Override
-    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
+    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {        
         Collection<GrantedAuthority> authorities = Stream.concat(
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
                 extractResourceRoles(jwt).stream()
@@ -43,7 +51,8 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
                 getPrincipleClaimName(jwt)
         );
     }
-
+    
+    
     private String getPrincipleClaimName(Jwt jwt) {
         String claimName = JwtClaimNames.SUB;
         if (principleAttribute != null) {
