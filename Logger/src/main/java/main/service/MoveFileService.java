@@ -8,6 +8,10 @@ import java.nio.file.StandardCopyOption;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+
+/**
+ *  This class is a schedular to move the files at a given interval
+ */
 @Service
 public class MoveFileService {
 

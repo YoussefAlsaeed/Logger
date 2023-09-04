@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import main.model.Log;
@@ -47,9 +48,11 @@ public class LogController {
 	 * @return ResponseEntity indicating the success or failure of log creation.
 	 */
 	@Operation(description = "POST api that allows log entry creation and then sent to matching kafka topic")
+	@SecurityRequirement(name = "bearerAuth") // Indicate that the API requires a Bearer token
 	@PostMapping("/rest-log")
     public ResponseEntity<String> consumeLog(@RequestBody @Valid Log log) 
 	{
+		// Get log file name
         String time = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String filename = log.getSource().toString() + "_" + time;
 
