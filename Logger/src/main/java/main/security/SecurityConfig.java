@@ -1,13 +1,14 @@
 package main.security;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,25 @@ public class SecurityConfig {
     @Value("${security.url}")
     private String url;
     
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+    private String jwks;    
+    
+    private static final String[] SWAGGER_AUTHLIST = {
+    	"/api/v1/auth/**",
+    	"/v3/api-docs/**",
+    	"/v3/api-docs.yaml",
+    	"/swagger-ui/**",
+    	"/swagger-ui.html"
+    };
+    
+    // This bean is used to ignore the issuer check by providing custom decoder
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwks)
+                .build();
+        return jwtDecoder;
+    }     
+    
 
 
     // This method configures the security filter chain, which is the heart of Spring Security's request processing.
@@ -38,7 +58,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             // Configure authorization rules for HTTP requests.
             .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers(url).hasRole(role)  
+                authorizeRequests.requestMatchers(url).hasRole(role)
+                .requestMatchers(SWAGGER_AUTHLIST).permitAll() //Allow access to swagger
                 .anyRequest().authenticated()) // Allow any authenticated user to access any request
             
             // Configure OAuth2 resource server settings.
