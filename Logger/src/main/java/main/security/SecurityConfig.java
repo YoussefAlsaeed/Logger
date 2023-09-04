@@ -34,6 +34,14 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     private String jwks;    
     
+    private static final String[] SWAGGER_AUTHLIST = {
+    	"/api/v1/auth/**",
+    	"/v3/api-docs/**",
+    	"/v3/api-docs.yaml",
+    	"/swagger-ui/**",
+    	"/swagger-ui.html"
+    };
+    
     // This bean is used to ignore the issuer check by providing custom decoder
     
     @Bean
@@ -53,7 +61,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             // Configure authorization rules for HTTP requests.
             .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers(url).hasRole(role)  
+                authorizeRequests.requestMatchers(url).hasRole(role)
+                .requestMatchers(SWAGGER_AUTHLIST).permitAll() //Allow access to swagger
                 .anyRequest().authenticated()) // Allow any authenticated user to access any request
             
             // Configure OAuth2 resource server settings.

@@ -3,10 +3,8 @@ package main.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +24,6 @@ import main.util.LogValidationUtil;
 @RestController
 @Validated
 @RequestMapping("/log")
-//@PreAuthorize("hasRole('client_user')")
 public class LogController {
 	
 	// Inject the LogUtil to validate logs before sending them.
@@ -48,8 +45,8 @@ public class LogController {
 	 * @return ResponseEntity indicating the success or failure of log creation.
 	 */
 	@Operation(description = "POST api that allows log entry creation and then sent to matching kafka topic")
-	@SecurityRequirement(name = "bearerAuth") // Indicate that the API requires a Bearer token
 	@PostMapping("/rest-log")
+	@SecurityRequirement(name="BearerAuth")
     public ResponseEntity<String> consumeLog(@RequestBody @Valid Log log) 
 	{
 		// Get log file name
