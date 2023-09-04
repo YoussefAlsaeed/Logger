@@ -20,31 +20,41 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.stereotype.Component;
 
+/**
+ * A custom converter to convert a JWT (JSON Web Token) into an AbstractAuthenticationToken.
+ */
 @Component
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
+    // An instance of JwtGrantedAuthoritiesConverter to extract authorities from JWT
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter();
-    
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthConverter.class);
 
-
+    // Configuration properties
     @Value("${jwt.auth.converter.principle-attribute}")
     private String principleAttribute;
-    
+
     @Value("${jwt.auth.converter.resource-id}")
     private String resourceId;
-    
+
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuer;
 
+    /**
+     * Converts a JWT into an AbstractAuthenticationToken.
+     *
+     * @param jwt The JWT to convert.
+     * @return An AbstractAuthenticationToken containing authentication details.
+     */
     @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {        
+        // Extract authorities from JWT claims and resource roles
         Collection<GrantedAuthority> authorities = Stream.concat(
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
                 extractResourceRoles(jwt).stream()
         ).collect(Collectors.toSet());
 
+        // Create a JwtAuthenticationToken with JWT, authorities, and principle claim name
         return new JwtAuthenticationToken(
                 jwt,
                 authorities,
@@ -52,7 +62,12 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         );
     }
     
-    
+    /**
+     * Get the principle claim name from JWT.
+     *
+     * @param jwt The JWT.
+     * @return The principle claim name.
+     */
     private String getPrincipleClaimName(Jwt jwt) {
         String claimName = JwtClaimNames.SUB;
         if (principleAttribute != null) {
@@ -61,6 +76,12 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         return jwt.getClaim(claimName);
     }
 
+    /**
+     * Extract resource roles from JWT.
+     *
+     * @param jwt The JWT.
+     * @return A collection of GrantedAuthority objects representing resource roles.
+     */
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
         Map<String, Object> resourceAccess;
         Map<String, Object> resource;

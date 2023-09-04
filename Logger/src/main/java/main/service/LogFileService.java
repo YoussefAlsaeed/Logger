@@ -13,6 +13,11 @@ import main.controller.LogController;
 import main.model.Log;
 
 
+
+/**
+ * This class provide service to log into suitable filenames using JSON format
+ */
+
 @Service
 public class LogFileService {
 	
