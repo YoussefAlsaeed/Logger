@@ -59,8 +59,8 @@ services:
       retries: 10
   
   elasticsearch:
-    container_name: elasticsearch-cntr
-    image: elasticsearch:7.9.1
+    container_name: elasticsearch
+    image: elasticsearch:7.17.13
     restart: always    
     environment:
       - cluster.name=kafka-cluster
@@ -89,35 +89,21 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-  logstash:
-    container_name: logstash-cntr
-    image: logstash:7.9.1
-    restart: always    
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      
+  fluentd:
+    container_name: fluentd
+    build: ./fluentd
     volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-    ports:
-      - 5044:5044
+      - ./fluentd/conf:/fluentd/etc
     depends_on:
       - elasticsearch
-    stdin_open: true
-    tty: true
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "50"
-    healthcheck:
-      test: ["CMD", "curl", "--silent", "--fail", "http://logstash-cntr:9600"]
-      interval: 30s
-      timeout: 15s
-      retries: 3
+      - kafka
+    ports:
+      - '24224:24224'   
+      
   kibana:
     container_name: kibana-cntr
-    image: kibana:7.9.1
+    image: kibana:7.17.13
     restart: always    
     ulimits:
       memlock:
