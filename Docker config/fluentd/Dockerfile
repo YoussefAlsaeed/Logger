@@ -4,6 +4,6 @@ USER root
 RUN gem install elasticsearch -v 7.13
 RUN gem install fluent-plugin-elasticsearch
 RUN gem install fluent-plugin-kafka
-RUN gem install fluent-plugin-rewrite-tag-filter
+RUN gem install fluent-plugin-record-reformer
 USER fluent
 
