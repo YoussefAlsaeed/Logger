@@ -2,7 +2,7 @@ version: '3.3'
 services:
   spring-boot-app:
     container_name: SpringApp
-    image: kafkalogger:fluentd # spring-app-image:tag
+    image: youssefalsaaed/kafkalogger:fluentd # spring-app-image:tag
     restart: always
     ports:
       - "8080:8080" 
