@@ -98,6 +98,7 @@ services:
     depends_on:
       - elasticsearch
       - kafka
+    restart: always        
     ports:
       - '24224:24224'   
       
